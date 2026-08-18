@@ -14,8 +14,8 @@ console.log('\n' + '='.repeat(80));
 console.log(`🚀 BACKEND STARTUP - ${startupTime}`);
 console.log(`   BUILD_ID: ${BUILD_ID}`);
 console.log(`   NODE_ENV: ${process.env.NODE_ENV}`);
-console.log(`   Payment Provider: ${process.env.PAYMENT_PROVIDER || 'hashpay'}`);
-console.log(`   API Key Present: ${Boolean(process.env.HASHPAY_API_KEY)}`);
+console.log(`   Payment Provider: ${process.env.PAYMENT_PROVIDER || 'daraja'}`);
+console.log(`   Daraja Configured: ${Boolean(process.env.DARAJA_CONSUMER_KEY && process.env.DARAJA_CONSUMER_SECRET && process.env.DARAJA_CALLBACK_URL)}`);
 console.log('='.repeat(80) + '\n');
 
 // Force flush stdout immediately
@@ -60,8 +60,8 @@ app.get('/api/health', (req, res) => {
     buildVersion: BUILD_ID,
     startupTime: startupTime,
     nodeEnv: process.env.NODE_ENV,
-    paymentProvider: process.env.PAYMENT_PROVIDER || 'hashpay',
-    hashpayConfigured: Boolean(process.env.HASHPAY_API_KEY && process.env.HASHPAY_API_SECRET),
+    paymentProvider: process.env.PAYMENT_PROVIDER || 'daraja',
+    darajaConfigured: Boolean(process.env.DARAJA_CONSUMER_KEY && process.env.DARAJA_CONSUMER_SECRET && process.env.DARAJA_CALLBACK_URL),
     services: {
       push: pushService.isEnabled(),
     },
