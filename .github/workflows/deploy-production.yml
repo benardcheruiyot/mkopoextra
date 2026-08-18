@@ -46,14 +46,16 @@ jobs:
             chmod 600 ~/.ssh/id_ed25519
             eval "$(ssh-agent -s)"
             ssh-add ~/.ssh/id_ed25519
-            ssh-keyscan -H "${VPS_HOST}" >> ~/.ssh/known_hosts
+            ssh-keyscan -H "${VPS_HOST}" >> ~/.ssh/known_hosts 2>/dev/null || true
             chmod 600 ~/.ssh/known_hosts
-            echo "SSH_KEY_MODE=true" >> "$GITHUB_ENV"
+            echo "SSH_MODE=key" >> "$GITHUB_ENV"
           else
-            echo "SSH_KEY_MODE=false" >> "$GITHUB_ENV"
             touch ~/.ssh/known_hosts
             chmod 600 ~/.ssh/known_hosts
+            echo "SSH_MODE=password" >> "$GITHUB_ENV"
           fi
+
+          echo "DEPLOY_HOST=${VPS_USER}@${VPS_HOST}" >> "$GITHUB_ENV"
 
       - name: Prepare env files from GitHub Secrets or defaults
         shell: bash
@@ -84,15 +86,20 @@ jobs:
       - name: Run full remote recovery deployment
         shell: bash
         env:
-          DEPLOY_HOST: ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+          DEPLOY_HOST: ${{ env.DEPLOY_HOST }}
           SSH_PASSWORD: ${{ secrets.VPS_PASSWORD }}
-          APP_DOMAIN: ${{ vars.APP_DOMAIN }}
-          CERTBOT_EMAIL: ${{ vars.CERTBOT_EMAIL }}
+          APP_DOMAIN: ${{ env.APP_DOMAIN }}
+          CERTBOT_EMAIL: ${{ env.CERTBOT_EMAIL }}
           DEPLOY_REPO: ${{ vars.DEPLOY_REPO }}
           DEPLOY_BRANCH: ${{ vars.DEPLOY_BRANCH }}
           DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
         run: |
           set -euo pipefail
+
+          if [ "${SSH_MODE:-key}" = "password" ] && [ -z "${SSH_PASSWORD:-}" ]; then
+            echo "No SSH key and no VPS_PASSWORD were supplied. Deployment cannot continue."
+            exit 1
+          fi
 
           chmod +x ./deploy_and_restart.sh
 
