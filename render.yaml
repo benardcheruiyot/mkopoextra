@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: lendhub-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: PAYMENT_PROVIDER
+        value: daraja
+      - key: JWT_SECRET
+        value: xvzs6TGf7xKo3qZIHSGXz0cRYeI4G37c2uGosSsFufueiVnQtnUcZ2IBXBfmS3WR
+      - key: ALLOWED_ORIGINS
+        value: https://lendhub.vercel.app,https://www.lendhub.vercel.app
+      - key: FRONTEND_URL
+        value: https://lendhub.vercel.app
+      - key: APP_PUBLIC_URL
+        value: https://api.lendhub.render.com
+      # ADD THESE IN RENDER DASHBOARD (DO NOT COMMIT SECRETS):
+      # - key: MONGODB_URI
+      #   value: your_mongodb_connection_string
+      # - key: DARAJA_CONSUMER_KEY
+      #   value: your_daraja_consumer_key
+      # - key: DARAJA_CONSUMER_SECRET
+      #   value: your_daraja_consumer_secret
+      # - key: DARAJA_BUSINESS_SHORTCODE
+      #   value: 5416814
+      # - key: DARAJA_CALLBACK_URL
+      #   value: https://api.lendhub.render.com/api/payments/callback
+      # - key: VAPID_PUBLIC_KEY
+      #   value: your_vapid_public_key
+      # - key: VAPID_PRIVATE_KEY
+      #   value: your_vapid_private_key

@@ -1,0 +1,16 @@
+Build: c57b9a3-final-auth-fix
+Timestamp: 2026-08-13T14:30:00Z
+This file forces Render to invalidate cache and perform a clean rebuild.
+
+FINAL FIX: Explicitly catch 'Failed to authenticate with M-Pesa' message
+The exact Hashpay response is:
+'Failed to authenticate with M-Pesa. Please ensure your phone number is correct and try again.'
+
+Root cause: Our regex patterns weren't catching this exact message format.
+Solution: Added explicit pattern /failed.*to.*authenticate/ to catch auth failures.
+
+This ensures:
+- Auth failures NEVER become phone number errors
+- Only true invalid phone patterns get phone message
+- Everything else gets generic error message
+

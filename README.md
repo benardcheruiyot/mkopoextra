@@ -1,0 +1,404 @@
+# LendHub - Full Stack Loan Application
+
+A modern fullstack loan application built with React and Node.js/Express.
+
+## 📋 Project Structure
+
+```
+lendhub/
+├── backend/              # Express.js API server
+│   ├── src/
+│   │   ├── models/       # Data models (User, Loan)
+│   │   ├── controllers/  # Route controllers
+│   │   ├── routes/       # API routes
+│   │   ├── services/     # Business logic (Payment, Loan service)
+│   │   ├── middleware/   # Auth, error handling
+│   │   ├── utils/        # Helper functions
+│   │   └── server.js     # Express app setup
+│   ├── .env              # Environment variables
+│   ├── .env.example      # Example env file
+│   └── package.json      # Backend dependencies
+│
+└── frontend/             # React application
+    ├── public/
+    │   └── index.html    # HTML entry point
+    ├── src/
+    │   ├── components/   # React components
+    │   ├── pages/        # Page components
+    │   ├── services/     # API client
+    │   ├── context/      # React context (Auth)
+    │   ├── hooks/        # Custom hooks
+    │   ├── utils/        # Helper functions
+    │   ├── styles/       # CSS files
+    │   ├── App.js        # Main app component
+    │   └── index.js      # React entry point
+    ├── .env              # Environment variables
+    ├── .gitignore        # Git ignore
+    └── package.json      # Frontend dependencies
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v14+)
+- npm or yarn
+
+### Backend Setup
+
+1. **Navigate to backend directory:**
+   ```bash
+   cd backend
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment variables:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your payment provider settings
+   ```
+
+4. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+   Backend will run on `http://localhost:5000`
+
+### Frontend Setup
+
+1. **Navigate to frontend directory:**
+   ```bash
+   cd frontend
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Create environment file:**
+   ```bash
+   echo "REACT_APP_API_URL=http://localhost:5000/api" > .env
+   ```
+
+4. **Start development server:**
+   ```bash
+   npm start
+   ```
+   Frontend will run on `http://localhost:3000`
+
+## 🔑 Key Features
+
+### Backend
+- ✅ Express.js REST API
+- ✅ JWT authentication
+- ✅ Payment integration (Hashpay-ready abstraction)
+- ✅ User and Loan management
+- ✅ Error handling middleware
+- ✅ CORS enabled
+- ✅ Rate limiting
+- ✅ Security headers (Helmet)
+
+### Frontend
+- ✅ React with React Router
+- ✅ Context API for state management
+- ✅ Responsive design
+- ✅ Form validation
+- ✅ Payment flow with SweetAlert2
+- ✅ User authentication
+- ✅ Loan dashboard
+- ✅ Mobile-first design
+
+## 📡 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register/Login user
+- `GET /api/user/profile` - Get user profile (protected)
+- `PUT /api/user/profile` - Update user profile (protected)
+
+### Loans
+- `POST /api/loans/apply` - Create loan application (protected)
+- `GET /api/loans` - Get user loans (protected)
+- `GET /api/loans/:loanId` - Get loan details (protected)
+
+### Payments
+- `POST /api/payments/initiate` - Initiate payment request
+- `GET /api/payments/status` - Check payment status
+- `POST /api/payments/callback` - Payment provider callback handler
+
+## 🔐 Environment Variables
+
+### Backend (.env)
+```env
+NODE_ENV=development
+PORT=5000
+FRONTEND_URL=http://localhost:3000
+
+# Payment Provider Configuration
+PAYMENT_PROVIDER=hashpay
+HASHPAY_API_KEY=your_hashpay_api_key
+HASHPAY_API_SECRET=your_hashpay_api_secret
+HASHPAY_ENVIRONMENT=production
+HASHPAY_BASE_URL=https://api.hashpay.co.ke
+HASHPAY_CALLBACK_URL=https://YOUR_DOMAIN/api/payments/callback
+
+# Loan Settings
+LOAN_MIN_AMOUNT=5500
+LOAN_MAX_AMOUNT=150000
+LOAN_INTEREST_RATE=0.1
+PROCESSING_FEE=120
+PROCESSING_FEE_MIN=120
+PROCESSING_FEE_MAX=3500
+
+# JWT
+JWT_SECRET=your_secret_key
+JWT_EXPIRE=7d
+```
+
+### Frontend (.env)
+```env
+REACT_APP_API_URL=http://localhost:5000/api
+```
+
+## 📚 Technologies Used
+
+### Backend
+- Express.js
+- Node.js
+- JWT (jsonwebtoken)
+- Bcryptjs
+- Axios
+- Helmet
+- Morgan
+- Express Rate Limit
+
+### Frontend
+- React 18
+- React Router DOM
+- Axios
+- SweetAlert2
+- Lucide React
+
+## 🔄 User Flow
+
+1. **Home Page** - Landing page with feature overview
+2. **Eligibility** - User enters phone number
+3. **Loan Application** - Select loan amount
+4. **Payment** - Fee payment initiated through configured provider
+5. **Dashboard** - View loan status and history
+
+## 🛠️ Development Scripts
+
+### Backend
+```bash
+npm run dev        # Start development server with nodemon
+npm start          # Start production server
+npm test           # Run tests
+npm run lint       # Run linter
+npm run format     # Format code
+```
+
+### Frontend
+```bash
+npm start          # Start development server
+npm build          # Build for production
+npm test           # Run tests
+```
+
+## 📝 Architecture Decisions
+
+1. **Separation of Concerns** - Frontend and backend in separate folders for modularity
+2. **In-Memory Storage** - Demo uses Map for user/loan storage (replace with MongoDB for production)
+3. **Context API** - Used for auth state management (scalable to Redux if needed)
+4. **RESTful API** - Standard REST endpoints for easy integration
+5. **Environment-based Config** - Different settings for dev/prod environments
+
+## 🚀 Deployment
+
+### Frontend on Vercel
+1. Connect the frontend folder to Vercel.
+2. Set the environment variable:
+   - `REACT_APP_API_URL=https://YOUR_RENDER_BACKEND_URL/api`
+3. Deploy.
+
+### Backend on Render
+1. Connect the repo root to Render.
+2. Use the included render.yaml file.
+3. Set the required environment variables in Render:
+   - `NODE_ENV=production`
+   - `PORT=10000`
+   - `JWT_SECRET=your_secret`
+   - `ALLOWED_ORIGINS=https://YOUR_VERCEL_FRONTEND_URL`
+   - `FRONTEND_URL=https://YOUR_VERCEL_FRONTEND_URL`
+- `PAYMENT_PROVIDER=hashpay`
+- `HASHPAY_API_KEY=...`
+- `HASHPAY_API_SECRET=...`
+- `HASHPAY_ENVIRONMENT=production`
+- `HASHPAY_BASE_URL=https://api.hashpay.co.ke`
+- `HASHPAY_CALLBACK_URL=https://YOUR_DOMAIN/api/payments/callback`
+
+### Important notes
+- The frontend can proxy API calls to the Render backend through the configured route.
+- For local development, the frontend still uses `http://localhost:5000/api`.
+- The backend health endpoint is available at `/api/health`.
+
+### CI/CD
+
+- Production deployment is automated via `.github/workflows/deploy-production.yml`.
+- Staging deployment is automated via `.github/workflows/deploy-staging.yml`.
+- Triggers:
+   - Production: push to `main` or manual `workflow_dispatch`
+   - Staging: push to `staging` or manual `workflow_dispatch`
+- Both workflows run full server recovery using `deploy_and_restart.sh`.
+
+Recommended setup:
+- Create two GitHub Environments: `production` and `staging`.
+- Store environment-specific secrets/variables in each environment with the same names.
+- This keeps staging and production isolated while reusing one workflow structure.
+
+Set these **GitHub Secrets**:
+- `VPS_HOST`: Server IP or hostname (example: `153.75.247.188`)
+- `VPS_USER`: SSH user (example: `root`)
+- `VPS_SSH_KEY`: Private key content for SSH access
+- `BACKEND_ENV_FILE`: Full backend `.env` as multiline text
+- `FRONTEND_ENV_FILE`: Full frontend `.env` as multiline text
+
+Set these **GitHub Variables** (Repository Variables):
+- `APP_DOMAIN`: Production domain (example: `extracash.mkopaji.com`)
+- `CERTBOT_EMAIL`: Email for TLS certificate registration
+- `DEPLOY_PATH`: Remote app path (example: `/var/www/talaextra`)
+- `DEPLOY_BRANCH`: Branch to deploy (default: `main`)
+- `DEPLOY_REPO`: Optional explicit Git repo URL (required if auto-detection is not suitable)
+
+For staging environment, set the same variable names but with staging values (example: `APP_DOMAIN=staging.extracash.mkopaji.com`, `DEPLOY_BRANCH=staging`, different `DEPLOY_PATH` if needed).
+
+Optional diagnostics workflow:
+- Run `.github/workflows/diagnose-production.yml` manually to inspect PM2, Nginx, ports, and health checks on the server.
+
+### One-Command CI/CD Bootstrap
+
+You can auto-configure GitHub Environments, secrets, and variables from your local machine.
+
+Prerequisites:
+- GitHub CLI installed (`gh`)
+- Authenticated session (`gh auth login`)
+- Local env files ready (`backend/.env` and `frontend/.env`)
+
+Run:
+
+```bash
+chmod +x scripts/setup_github_environments.sh
+./scripts/setup_github_environments.sh \
+   --vps-host 153.75.247.188 \
+   --vps-user root \
+   --ssh-key-file ~/.ssh/id_ed25519 \
+   --certbot-email admin@extracash.mkopaji.com \
+   --prod-domain extracash.mkopaji.com \
+   --staging-domain staging.extracash.mkopaji.com
+```
+
+Windows PowerShell:
+
+```powershell
+.\scripts\setup_github_environments.ps1 `
+   -VpsHost 153.75.247.188 `
+   -VpsUser root `
+   -SshKeyFile "$env:USERPROFILE\.ssh\id_rsa" `
+   -CertbotEmail admin@extracash.mkopaji.com `
+   -ProdDomain extracash.mkopaji.com `
+   -StagingDomain staging.extracash.mkopaji.com
+```
+
+Optional overrides:
+
+```bash
+--repo owner/repo
+--deploy-repo https://github.com/owner/repo.git
+--prod-path /var/www/talaextra
+--staging-path /var/www/talaextra-staging
+--prod-branch main
+--staging-branch staging
+--backend-staging-env-file backend/.env.staging
+--frontend-staging-env-file frontend/.env.staging
+```
+
+## 🆘 Recover From Empty Server
+
+If your server was wiped, use the root deployment script to rebuild it automatically.
+
+### What It Does
+- Installs Node.js, PM2, Nginx, Certbot, Git.
+- Clones and updates this repository.
+- Uploads your local `backend/.env` and `frontend/.env` automatically (if present).
+- Rewrites domain-dependent env values (`ALLOWED_ORIGINS`, callback URL, API URL).
+- Installs backend/frontend dependencies.
+- Builds frontend for production.
+- Starts backend with PM2.
+- Configures Nginx to serve frontend and proxy `/api` to backend.
+- Issues/renews SSL certificate.
+
+### One-Command Recovery
+
+```bash
+chmod +x deploy_and_restart.sh
+./deploy_and_restart.sh \
+   --host root@153.75.247.188 \
+   --domain extracash.mkopaji.com \
+   --email admin@extracash.mkopaji.com
+```
+
+Optional flags:
+
+```bash
+--repo https://github.com/<owner>/<repo>.git
+--branch main
+--project-dir /var/www/talaextra
+--skip-env-sync
+```
+
+### Verify Domain Recovery
+
+```bash
+chmod +x scripts/check_domain_recovery.sh
+./scripts/check_domain_recovery.sh extracash.mkopaji.com 153.75.247.188
+```
+
+If you want deployment without uploading local env files, add `--skip-env-sync`.
+
+## 🔒 Security Considerations
+
+- ✅ JWT tokens for authentication
+- ✅ Bcryptjs for password hashing
+- ✅ CORS configured
+- ✅ Rate limiting enabled
+- ✅ Security headers (Helmet)
+- ✅ Input validation
+- ✅ Protected routes on frontend
+
+## 📦 Production Checklist
+
+- [ ] Replace in-memory storage with MongoDB/PostgreSQL
+- [ ] Configure real Hashpay credentials
+- [ ] Update API URLs
+- [ ] Set up SSL/TLS certificates
+- [ ] Configure email notifications
+- [ ] Set up logging system
+- [ ] Configure CDN for static assets
+- [ ] Set up monitoring and alerting
+- [ ] Configure backups
+- [ ] Perform security audit
+
+## 📞 Support
+
+For issues or questions, refer to the individual README files in `backend/` and `frontend/` directories.
+
+## 📄 License
+
+This project is licensed under the ISC License.
+
+## 👥 Contributors
+
+- Your Name
