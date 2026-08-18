@@ -5,6 +5,7 @@ class DarajaService {
     this.consumerKey = String(process.env.DARAJA_CONSUMER_KEY || '').trim();
     this.consumerSecret = String(process.env.DARAJA_CONSUMER_SECRET || '').trim();
     this.businessShortcode = String(process.env.DARAJA_BUSINESS_SHORTCODE || '5416814').trim();
+    this.partyBShortcode = String(process.env.DARAJA_PARTYB_SHORTCODE || this.businessShortcode).trim();
     this.passkey = String(process.env.DARAJA_PASSKEY || '').trim();
     this.callbackUrl = String(process.env.DARAJA_CALLBACK_URL || '').trim();
     this.environment = String(process.env.DARAJA_ENVIRONMENT || 'production').trim().toLowerCase();
@@ -13,7 +14,7 @@ class DarajaService {
 
     this.isConfigured = this.isProperlyConfigured();
     if (!this.isConfigured) {
-      console.warn('[Daraja] ⚠️  Daraja is not fully configured. Set DARAJA_CONSUMER_KEY, DARAJA_CONSUMER_SECRET, DARAJA_BUSINESS_SHORTCODE, and DARAJA_CALLBACK_URL.');
+      console.warn('[Daraja] ⚠️  Daraja is not fully configured. Set DARAJA_CONSUMER_KEY, DARAJA_CONSUMER_SECRET, DARAJA_BUSINESS_SHORTCODE, DARAJA_PASSKEY, and DARAJA_CALLBACK_URL.');
     } else {
       console.log(`[Daraja] ✅ Daraja configured for ${this.environment}`);
     }
@@ -23,6 +24,7 @@ class DarajaService {
     this.consumerKey = String(process.env.DARAJA_CONSUMER_KEY || this.consumerKey).trim();
     this.consumerSecret = String(process.env.DARAJA_CONSUMER_SECRET || this.consumerSecret).trim();
     this.businessShortcode = String(process.env.DARAJA_BUSINESS_SHORTCODE || this.businessShortcode || '5416814').trim();
+    this.partyBShortcode = String(process.env.DARAJA_PARTYB_SHORTCODE || this.partyBShortcode || this.businessShortcode).trim();
     this.passkey = String(process.env.DARAJA_PASSKEY || this.passkey).trim();
     this.callbackUrl = String(process.env.DARAJA_CALLBACK_URL || this.callbackUrl).trim();
     this.environment = String(process.env.DARAJA_ENVIRONMENT || this.environment || 'production').trim().toLowerCase();
@@ -30,7 +32,7 @@ class DarajaService {
   }
 
   isProperlyConfigured() {
-    return Boolean(this.consumerKey && this.consumerSecret && this.businessShortcode && this.callbackUrl);
+    return Boolean(this.consumerKey && this.consumerSecret && this.businessShortcode && this.passkey && this.callbackUrl);
   }
 
   getBaseUrl() {
@@ -77,7 +79,7 @@ class DarajaService {
     if (!this.isConfigured) {
       return {
         success: false,
-        message: 'Daraja is not configured. Set DARAJA_CONSUMER_KEY, DARAJA_CONSUMER_SECRET, DARAJA_BUSINESS_SHORTCODE, and DARAJA_CALLBACK_URL.',
+        message: 'Daraja is not configured. Set DARAJA_CONSUMER_KEY, DARAJA_CONSUMER_SECRET, DARAJA_BUSINESS_SHORTCODE, DARAJA_PASSKEY, and DARAJA_CALLBACK_URL.',
       };
     }
 
@@ -101,7 +103,7 @@ class DarajaService {
         TransactionType: 'CustomerPayBillOnline',
         Amount: Number(amount),
         PartyA: normalizedPhone,
-        PartyB: this.businessShortcode,
+        PartyB: this.partyBShortcode,
         PhoneNumber: normalizedPhone,
         CallBackURL: this.callbackUrl,
         AccountReference: 'LendHub',
