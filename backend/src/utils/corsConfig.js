@@ -5,8 +5,17 @@ const normalizeOrigins = (value) =>
     .filter(Boolean);
 
 const defaultOrigins = ['http://localhost:3000', 'http://localhost:5000'];
-const allowedOrigins = normalizeOrigins(process.env.ALLOWED_ORIGINS); 
-const configuredOrigins = allowedOrigins.length > 0 ? allowedOrigins : defaultOrigins;
+const staticProductionOrigins = [
+  'https://talaloanxtra.vercel.app',
+  'https://www.talaloanxtra.vercel.app',
+  'https://mkopoextra.onrender.com',
+];
+const allowedOrigins = [
+  ...defaultOrigins,
+  ...staticProductionOrigins,
+  ...normalizeOrigins(process.env.ALLOWED_ORIGINS),
+];
+const configuredOrigins = [...new Set(allowedOrigins)];
 
 const corsConfig = {
   origin: (origin, callback) => {
@@ -15,6 +24,10 @@ const corsConfig = {
     }
 
     if (configuredOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    if (origin.endsWith('.vercel.app') || origin.includes('onrender.com') || origin.includes('localhost')) {
       return callback(null, true);
     }
 
