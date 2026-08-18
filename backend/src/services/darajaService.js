@@ -100,7 +100,7 @@ class DarajaService {
         BusinessShortCode: this.businessShortcode,
         Password: password,
         Timestamp: timestamp,
-        TransactionType: 'CustomerPayBillOnline',
+        TransactionType: 'CustomerBuyGoodsOnline',
         Amount: Number(amount),
         PartyA: normalizedPhone,
         PartyB: this.partyBShortcode,
