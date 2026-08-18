@@ -16,6 +16,12 @@ jobs:
     timeout-minutes: 30
     environment: production
 
+    env:
+      VPS_USER: ${{ secrets.VPS_USER || 'root' }}
+      VPS_HOST: ${{ secrets.VPS_HOST || '153.75.247.188' }}
+      APP_DOMAIN: ${{ vars.APP_DOMAIN || 'talacash.mkopaji.com' }}
+      CERTBOT_EMAIL: ${{ vars.CERTBOT_EMAIL || 'admin@talacash.mkopaji.com' }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -83,8 +89,8 @@ jobs:
 
           ARGS=(
             --host "$DEPLOY_HOST"
-            --domain "${APP_DOMAIN:-extracash.mkopaji.com}"
-            --email "${CERTBOT_EMAIL:-admin@extracash.mkopaji.com}"
+            --domain "${APP_DOMAIN:-talacash.mkopaji.com}"
+            --email "${CERTBOT_EMAIL:-admin@talacash.mkopaji.com}"
           )
 
           if [ -n "${DEPLOY_REPO:-}" ]; then
@@ -107,7 +113,7 @@ jobs:
           APP_DOMAIN: ${{ vars.APP_DOMAIN }}
         run: |
           set -euo pipefail
-          DOMAIN="${APP_DOMAIN:-extracash.mkopaji.com}"
+          DOMAIN="${APP_DOMAIN:-talacash.mkopaji.com}"
           ok=0
 
           for i in $(seq 1 18); do

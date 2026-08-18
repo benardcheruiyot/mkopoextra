@@ -4,7 +4,8 @@ set -euo pipefail
 # One-command fresh-server recovery and deployment.
 #
 # Usage:
-#   ./deploy_and_restart.sh --host root@153.75.247.188 --domain extracash.mkopaji.com --email admin@extracash.mkopaji.com
+#   ./deploy_and_restart.sh --host root@153.75.247.188 --domain talacash.mkopaji.com --email admin@talacash.mkopaji.com
+#   ./deploy_and_restart.sh --host 153.75.247.188 --domain talacash.mkopaji.com --email admin@talacash.mkopaji.com
 #
 # Optional:
 #   --repo https://github.com/<owner>/<repo>.git
@@ -64,6 +65,10 @@ done
 if [[ -z "$HOST" || -z "$DOMAIN" || -z "$EMAIL" ]]; then
 	echo "Missing required args. Use --host, --domain, --email."
 	exit 1
+fi
+
+if [[ "$HOST" != *"@"* ]]; then
+	HOST="root@${HOST}"
 fi
 
 if [[ -z "$REPO_URL" ]]; then
