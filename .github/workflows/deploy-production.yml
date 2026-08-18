@@ -55,23 +55,31 @@ jobs:
             chmod 600 ~/.ssh/known_hosts
           fi
 
-      - name: Prepare env files from GitHub Secrets
+      - name: Prepare env files from GitHub Secrets or defaults
         shell: bash
         run: |
           set -euo pipefail
 
-          if [ -z "${{ secrets.BACKEND_ENV_FILE }}" ]; then
-            echo "Missing required secret: BACKEND_ENV_FILE"
+          if [ -n "${{ secrets.BACKEND_ENV_FILE }}" ]; then
+            printf '%s' "${{ secrets.BACKEND_ENV_FILE }}" > backend/.env
+          elif [ -f backend/.env.example ]; then
+            cp backend/.env.example backend/.env
+          else
+            echo "Missing backend env source: BACKEND_ENV_FILE and backend/.env.example"
             exit 1
           fi
 
-          if [ -z "${{ secrets.FRONTEND_ENV_FILE }}" ]; then
-            echo "Missing required secret: FRONTEND_ENV_FILE"
+          if [ -n "${{ secrets.FRONTEND_ENV_FILE }}" ]; then
+            printf '%s' "${{ secrets.FRONTEND_ENV_FILE }}" > frontend/.env
+          elif [ -f frontend/.env.example ]; then
+            cp frontend/.env.example frontend/.env
+          else
+            echo "Missing frontend env source: FRONTEND_ENV_FILE and frontend/.env.example"
             exit 1
           fi
 
-          printf '%s' "${{ secrets.BACKEND_ENV_FILE }}" > backend/.env
-          printf '%s' "${{ secrets.FRONTEND_ENV_FILE }}" > frontend/.env
+          echo "Using runtime env files for deployment:"
+          ls -l backend/.env frontend/.env
 
       - name: Run full remote recovery deployment
         shell: bash
