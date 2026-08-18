@@ -1,0 +1,97 @@
+# 🚀 Vercel + Render Deployment Instructions
+
+## ✅ Frontend (Vercel) - Auto-Deployed
+The frontend has been automatically deployed to Vercel. Check the deployment at:
+- **Production**: https://talacash.vercel.app
+- **Domain**: https://talacash.mkopaji.com (after DNS update)
+
+---
+
+## ⚠️ Backend (Render) - Manual Steps Required
+
+### Step 1: Create Render Service (if not already created)
+1. Go to https://dashboard.render.com
+2. Click "New +" → "Web Service"
+3. Connect your GitHub repo: `benardcheruiyot/mkopoextra`
+4. Configure:
+   - **Name**: `talacash-backend`
+   - **Environment**: Node
+   - **Build Command**: `cd backend && npm install`
+   - **Start Command**: `cd backend && npm start`
+   - **Plan**: Free (or Starter for production)
+
+### Step 2: Add Environment Variables to Render
+In your Render service dashboard, go to **Environment**:
+
+Copy and paste these environment variables:
+
+```
+NODE_ENV=production
+PORT=5000
+ALLOWED_ORIGINS=https://talacash.vercel.app,https://www.talacash.vercel.app,https://talacash.mkopaji.com
+ALLOWED_BASE_DOMAIN=talacash.vercel.app
+MONGODB_URI=mongodb+srv://bcheruiyot221_db_user:3UAZ5oToTlyQVAML@cluster0.aqghn4v.mongodb.net/?appName=Cluster0
+JWT_SECRET=xvzs6TGf7xKo3qZIHSGXz0cRYeI4G37c2uGosSsFufueiVnQtnUcZ2IBXBfmS3WR
+TALA_EXTRA_JWT_FALLBACK=xvzs6TGf7xKo3qZIHSGXz0cRYeI4G37c2uGosSsFufueiVnQtnUcZ2IBXBfmS3WR
+JWT_EXPIRE=7d
+PAYMENT_PROVIDER=daraja
+DARAJA_CONSUMER_KEY=1pqraGWiLu1nRWGyR8vdFuxwWEd2Cn9d7e4SOYGZnfRAKwGU
+DARAJA_CONSUMER_SECRET=Zl3TmwpznVpjGBDyUQXeneJTOGQm5KFDY6l0CAAHbOso87iJWSgyFIRX0fT15IdB
+DARAJA_BUSINESS_SHORTCODE=3700945
+DARAJA_PARTYB_SHORTCODE=5416814
+DARAJA_CALLBACK_URL=https://talacash-backend.onrender.com/api/payments/callback
+DARAJA_ENVIRONMENT=production
+DARAJA_TIMEOUT=60
+VAPID_PUBLIC_KEY=BDaQbOY3galc_WwK38D52o5GrXgaa01I1vWp6JgDRMWRndWTONGdQXu4T5JiJE2DXozEMb9bOreSOJfRUAplB2M
+VAPID_PRIVATE_KEY=vtdQgZMqR9qtiGxxRT4fxGb2_HVO_sMF_gL1ds6c5zY
+VAPID_SUBJECT=mailto:admin@talacash.mkopaji.com
+APP_NAME=Extra Cash
+APP_PUBLIC_URL=https://talacash-backend.onrender.com
+LOAN_MIN_AMOUNT=5500
+LOAN_MAX_AMOUNT=150000
+LOAN_INTEREST_RATE=0.1
+LOAN_TERMS_DAYS=30,60,90
+PROCESSING_FEE=120
+PROCESSING_FEE_MIN=120
+PROCESSING_FEE_MAX=3500
+LOG_LEVEL=info
+```
+
+### Step 3: Deploy
+1. Click **Deploy** in Render dashboard
+2. Wait 5-10 minutes for deployment to complete
+3. Check logs for: `🚀 Server running on http://localhost:5000`
+
+### Step 4: Update DNS (if using talacash.mkopaji.com)
+Add these DNS records:
+
+```
+A     talacash.mkopaji.com    →  <Vercel IP>
+CNAME www.talacash.mkopaji.com → talacash.vercel.app
+```
+
+---
+
+## ✅ Verification
+
+Once both are deployed, test:
+
+```bash
+# Frontend
+curl https://talacash.vercel.app
+
+# Backend
+curl https://talacash-backend.onrender.com/api/users
+
+# Via frontend API proxy
+curl https://talacash.vercel.app/api/users
+```
+
+---
+
+## 📝 Current Deployment Status
+
+- ✅ **Frontend**: Code pushed, auto-deployed to Vercel
+- ⏳ **Backend**: Waiting for manual Render setup
+- 🌐 **Domain**: Ready for DNS update after both services are live
+
