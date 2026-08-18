@@ -3,14 +3,34 @@ const darajaService = require('./darajaService');
 
 class PaymentService {
   constructor() {
-    this.providerName = String(process.env.PAYMENT_PROVIDER || 'hashpay').trim().toLowerCase();
     this.providers = {
       hashpay: hashpayService,
       daraja: darajaService,
     };
+    this.providerName = this.resolveProviderName();
     this.provider = this.providers[this.providerName] || this.providers.hashpay;
 
     console.log(`[PaymentService] Using provider: ${this.getProviderName()}`);
+  }
+
+  resolveProviderName() {
+    const requested = String(process.env.PAYMENT_PROVIDER || '').trim().toLowerCase();
+    const darajaConfigured = Boolean(
+      process.env.DARAJA_CONSUMER_KEY &&
+      process.env.DARAJA_CONSUMER_SECRET &&
+      process.env.DARAJA_CALLBACK_URL &&
+      (process.env.DARAJA_BUSINESS_SHORTCODE || process.env.DARAJA_PASSKEY)
+    );
+
+    if (darajaConfigured && (requested === 'daraja' || requested === 'hashpay' || !requested)) {
+      return 'daraja';
+    }
+
+    if (requested === 'daraja' || requested === 'hashpay') {
+      return requested;
+    }
+
+    return 'hashpay';
   }
 
   normalizePaymentError(rawValue) {
