@@ -26,22 +26,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup SSH agent
-        if: ${{ secrets.VPS_SSH_KEY != '' }}
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
-
-      - name: Add server to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
-
-      - name: Install sshpass (password fallback)
+      - name: Prepare SSH access
         shell: bash
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST || '153.75.247.188' }}
         run: |
+          set -euo pipefail
+
           sudo apt-get update
           sudo apt-get install -y sshpass
+
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          if [ -n "${VPS_SSH_KEY:-}" ]; then
+            printf '%s\n' "${VPS_SSH_KEY}" > ~/.ssh/id_ed25519
+            chmod 600 ~/.ssh/id_ed25519
+            eval "$(ssh-agent -s)"
+            ssh-add ~/.ssh/id_ed25519
+            ssh-keyscan -H "${VPS_HOST}" >> ~/.ssh/known_hosts
+            chmod 600 ~/.ssh/known_hosts
+            echo "SSH_KEY_MODE=true" >> "$GITHUB_ENV"
+          else
+            echo "SSH_KEY_MODE=false" >> "$GITHUB_ENV"
+            touch ~/.ssh/known_hosts
+            chmod 600 ~/.ssh/known_hosts
+          fi
 
       - name: Prepare env files from GitHub Secrets
         shell: bash
