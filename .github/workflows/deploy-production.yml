@@ -34,6 +34,7 @@ jobs:
         run: |
           set -euo pipefail
 
+          echo "Preparing deployment SSH access for production host ${VPS_HOST}"
           sudo apt-get update
           sudo apt-get install -y sshpass
 
