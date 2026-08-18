@@ -1,12 +1,14 @@
 const hashpayService = require('./hashpayService');
+const darajaService = require('./darajaService');
 
 class PaymentService {
   constructor() {
     this.providerName = String(process.env.PAYMENT_PROVIDER || 'hashpay').trim().toLowerCase();
     this.providers = {
       hashpay: hashpayService,
+      daraja: darajaService,
     };
-    this.provider = this.providers[this.providerName] || hashpayService;
+    this.provider = this.providers[this.providerName] || this.providers.hashpay;
 
     console.log(`[PaymentService] Using provider: ${this.getProviderName()}`);
   }

@@ -33,4 +33,18 @@ describe('PaymentService.initiatePayment', () => {
 
     expect(result.message).toMatch(/phone number/i);
   });
+
+  it('selects the Daraja provider when PAYMENT_PROVIDER=daraja', () => {
+    const previous = process.env.PAYMENT_PROVIDER;
+    process.env.PAYMENT_PROVIDER = 'daraja';
+
+    jest.resetModules();
+    const reloaded = require('./paymentService');
+    const darajaService = require('./darajaService');
+
+    expect(reloaded.getProviderName()).toBe('daraja');
+    expect(reloaded.getProvider()).toBe(darajaService);
+
+    process.env.PAYMENT_PROVIDER = previous;
+  });
 });
